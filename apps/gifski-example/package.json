@@ -1,0 +1,33 @@
+{
+  "name": "gifski-example",
+  "main": "index.js",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "lint": "expo lint",
+    "clean": "rm -rf ios android .expo node_modules/.cache"
+  },
+  "dependencies": {
+    "expo": "~54.0.33",
+    "expo-clipboard": "^8.0.8",
+    "expo-file-system": "~19.0.21",
+    "expo-gifski": "workspace:*",
+    "expo-image-picker": "~17.0.10",
+    "expo-sharing": "^14.0.8",
+    "expo-splash-screen": "~31.0.13",
+    "expo-status-bar": "~3.0.9",
+    "expo-video-thumbnails": "^10.0.8",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-safe-area-context": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.0",
+    "eslint": "^9.25.0",
+    "eslint-config-expo": "~10.0.0",
+    "typescript": "~5.9.2"
+  },
+  "private": true
+}

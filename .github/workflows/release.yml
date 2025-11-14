@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: packages/expo-gifski
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      # Rust toolchain
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: >-
+            aarch64-apple-ios,
+            x86_64-apple-ios,
+            aarch64-apple-ios-sim,
+            aarch64-linux-android,
+            armv7-linux-androideabi,
+            i686-linux-android,
+            x86_64-linux-android
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: packages/expo-gifski/rust
+
+      # Build iOS Rust libs
+      - name: Build iOS
+        run: ./ios/build.sh
+
+      # Build Android Rust libs
+      - name: Build Android
+        run: ./android/build.sh
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path || env.ANDROID_NDK_HOME }}
+
+      # Build TypeScript
+      - run: yarn install --immutable
+        working-directory: .
+
+      - run: yarn build
+
+      # Publish
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

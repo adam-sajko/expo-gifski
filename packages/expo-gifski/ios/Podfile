@@ -1,0 +1,7 @@
+platform :ios, '13.0'
+use_frameworks! :linkage => :static
+
+target 'ExpoGifski' do
+  pod 'ExpoModulesCore', :path => '../../node_modules/expo-modules-core'
+end
+

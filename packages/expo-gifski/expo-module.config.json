@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android"],
+  "ios": {
+    "modules": ["ExpoGifskiModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.gifski.ExpoGifskiModule"]
+  }
+}

@@ -1,0 +1,28 @@
+[package]
+name = "expo-gifski"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "expo_gifski"
+crate-type = ["lib", "staticlib", "cdylib"]
+
+[dependencies]
+gifski = "1.34"
+uniffi = { version = "0.29", features = ["cli"] }
+thiserror = "2"
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "src/bin/uniffi-bindgen.rs"
+
+[profile.dev]
+debug = 0
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+opt-level = "z"
+

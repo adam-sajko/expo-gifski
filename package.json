@@ -1,0 +1,22 @@
+{
+  "name": "expo-gifski-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "yarn workspace gifski-example start",
+    "android": "yarn workspace gifski-example android",
+    "ios": "yarn workspace gifski-example ios",
+    "lint": "yarn workspace gifski-example lint",
+    "build": "./scripts/rebuild.sh",
+    "build:clean": "./scripts/rebuild.sh --clean",
+    "open-gif": "./scripts/open-gif.sh"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.2"
+  },
+  "packageManager": "yarn@4.11.0"
+}

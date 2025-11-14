@@ -1,0 +1,16 @@
+node_modules/
+build/
+dist/
+*.log
+.DS_Store
+ios/Pods/
+ios/build/
+ios/*.xcworkspace
+ios/*.xcodeproj
+android/.gradle/
+android/build/
+android/app/build/
+rust/target/
+*.orig
+*.rej
+
