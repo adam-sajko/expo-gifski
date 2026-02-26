@@ -1,8 +1,10 @@
 name: Release
 
 on:
-  push:
-    tags: ["v*"]
+  workflow_dispatch:
+  # TODO: Uncomment this later
+  # push:
+  #   tags: ["v*"]
 
 permissions:
   contents: read
@@ -33,27 +35,28 @@ jobs:
             i686-linux-android,
             x86_64-linux-android
 
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r27c
+
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: packages/expo-gifski/rust
 
-      # Build iOS Rust libs
       - name: Build iOS
         run: ./ios/build.sh
 
-      # Build Android Rust libs
       - name: Build Android
         run: ./android/build.sh
         env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path || env.ANDROID_NDK_HOME }}
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
-      # Build TypeScript
       - run: yarn install --immutable
         working-directory: .
 
       - run: yarn build
 
-      # Publish
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

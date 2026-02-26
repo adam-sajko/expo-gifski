@@ -1,0 +1,53 @@
+<svg width="200" height="48" viewBox="0 0 200 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <clipPath id="clip0">
+    <rect width="48" height="48" rx="10"/>
+  </clipPath>
+  <linearGradient id="s1" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#F8CE43"/><stop offset="1" stop-color="#EFA020"/>
+  </linearGradient>
+  <linearGradient id="s2" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#F6984A"/><stop offset="1" stop-color="#E95F24"/>
+  </linearGradient>
+  <linearGradient id="s3" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#F2404E"/><stop offset="1" stop-color="#E11E26"/>
+  </linearGradient>
+  <linearGradient id="s4" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#EC20BC"/><stop offset="1" stop-color="#D50E87"/>
+  </linearGradient>
+  <linearGradient id="s5" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#D743BE"/><stop offset="1" stop-color="#AE2089"/>
+  </linearGradient>
+  <linearGradient id="s6" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#BB53BB"/><stop offset="1" stop-color="#852986"/>
+  </linearGradient>
+  <linearGradient id="s7" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#9259BB"/><stop offset="1" stop-color="#592D85"/>
+  </linearGradient>
+  <linearGradient id="s8" x1="0.5" y1="0" x2="0.5" y2="1">
+    <stop stop-color="#4E44B5"/><stop offset="1" stop-color="#4B45A3"/>
+  </linearGradient>
+  <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(4 4) rotate(90) scale(48)">
+    <stop stop-color="#2A2826"/><stop offset="1" stop-color="#161514"/>
+  </radialGradient>
+  <pattern id="grid" width="6" height="6" patternUnits="userSpaceOnUse">
+    <path d="M6 0H0V6" fill="none" stroke="white" stroke-opacity="0.08" stroke-width="0.5"/>
+  </pattern>
+</defs>
+<g clip-path="url(#clip0)">
+  <rect width="48" height="48" rx="10" fill="url(#bg)"/>
+  <rect x="0.5" y="0.5" width="47" height="47" rx="9.5" stroke="white" stroke-opacity="0.1" fill="none"/>
+  <rect width="48" height="48" fill="url(#grid)"/>
+  <g transform="translate(24,24) scale(0.05) rotate(45) translate(-264.5,-1147.4)">
+    <rect x="0.288" y="0.119" width="66.565" height="2294.559" fill="url(#s1)"/>
+    <rect x="66.277" y="0.696" width="66.565" height="2294.559" fill="url(#s2)"/>
+    <rect x="132.265" y="1.272" width="66.565" height="2294.559" fill="url(#s3)"/>
+    <rect x="198.253" y="1.849" width="66.565" height="2294.559" fill="url(#s4)"/>
+    <rect x="264.241" y="2.425" width="66.565" height="2294.559" fill="url(#s5)"/>
+    <rect x="330.23" y="3.002" width="66.565" height="2294.559" fill="url(#s6)"/>
+    <rect x="396.218" y="3.578" width="66.565" height="2294.559" fill="url(#s7)"/>
+    <rect x="462.206" y="4.155" width="66.565" height="2294.559" fill="url(#s8)"/>
+  </g>
+</g>
+<text x="60" y="31" font-family="Inter, -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19.5" font-weight="600" fill="#C84FE0">Expo Gifski</text>
+</svg>

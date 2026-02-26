@@ -1,17 +1,20 @@
 {
   "name": "expo-gifski",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Expo module for gifski - high-quality GIF encoder written in Rust",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "expo-module tsc",
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "lint": "eslint .",
+    "test": "expo-module test",
+    "prepare": "expo-module prepare",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "prepack": "./scripts/verify-prebuilt.sh",
+    "postpack": "rm -f README.md LICENSE THIRD-PARTY-NOTICES",
     "build:rust:ios": "cd ios && ./build.sh",
     "build:rust:android": "cd android && ./build.sh",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "prepare": "yarn build",
-    "prepack": "./scripts/verify-prebuilt.sh",
     "expo-module": "expo-module"
   },
   "keywords": [
@@ -44,6 +47,8 @@
   },
   "files": [
     "build",
+    "src",
+    "THIRD-PARTY-NOTICES",
     "ios/*.swift",
     "ios/*.h",
     "ios/*.podspec",

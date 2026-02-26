@@ -1,18 +1,25 @@
-# expo-gifski
-
-[gifski](https://gif.ski/) GIF encoder for Expo / React Native. Rust-powered, runs on iOS and Android.
-
-Video in, GIF out. Progress callbacks, quality/FPS/size control.
-
-<p align="center">
-  <img src="assets/expo-gifski-demo.gif" alt="expo-gifski demo" width="240" />
+<p>
+  <img
+    src=".github/resources/expo-gifski.svg"
+    alt="expo-gifski"
+    height="48" />
 </p>
 
-## Install
+🌈 Convert videos to high-quality GIFs in React Native & Expo, powered by [gifski](https://gif.ski/) (Rust).
+
+<!-- <p align="center">
+  <img src=".github/resources/expo-gifski-demo.gif" alt="expo-gifski demo" width="240" />
+</p> -->
+
+# Installation
+
+### Add the package to your npm dependencies
 
 ```bash
 npx expo install expo-gifski
 ```
+
+### Configure the Expo plugin
 
 Add the plugin in `app.json`:
 
@@ -22,20 +29,24 @@ Add the plugin in `app.json`:
 }
 ```
 
+### Build
+
 ```bash
 npx expo run:ios
 npx expo run:android
 ```
 
-Prebuilt binaries ship in the npm package -- no Rust toolchain needed.
+Prebuilt Rust binaries ship in the npm package — no Rust toolchain needed.
 
-## Usage
+# API
 
 ```typescript
 import { encodeGifFromVideo, addProgressListener } from "expo-gifski";
 ```
 
-### Encode
+### `encodeGifFromVideo(videoUri, outputPath, options?)`
+
+Converts a video file to a GIF. Returns a promise that resolves to the output file path.
 
 ```typescript
 const result = await encodeGifFromVideo(
@@ -45,9 +56,11 @@ const result = await encodeGifFromVideo(
 );
 ```
 
-Uses AVAssetImageGenerator on iOS, MediaMetadataRetriever on Android.
+Uses `AVAssetImageGenerator` on iOS, `MediaMetadataRetriever` on Android.
 
-### Progress
+### `addProgressListener(callback)`
+
+Subscribes to encoding progress events. Returns a subscription with a `remove()` method.
 
 ```typescript
 const sub = addProgressListener(
@@ -58,7 +71,20 @@ const sub = addProgressListener(
 // later: sub.remove()
 ```
 
-### Quick example
+### Options
+
+| Option      | Type      | Default | Description                    |
+| ----------- | --------- | ------- | ------------------------------ |
+| `width`     | `number`  | auto    | Output width in pixels         |
+| `height`    | `number`  | auto    | Output height in pixels        |
+| `fps`       | `number`  | `10`    | Frames per second              |
+| `quality`   | `number`  | `90`    | Quality 1–100                  |
+| `repeat`    | `number`  | `-1`    | -1 infinite, 0 none, >0 count  |
+| `fast`      | `boolean` | `false` | Faster encoding, lower quality |
+| `startTime` | `number`  | `0`     | Start time in seconds          |
+| `duration`  | `number`  | full    | Clip duration in seconds       |
+
+# Example
 
 Pick a video, encode it, show the GIF:
 
@@ -114,23 +140,12 @@ export default function App() {
 }
 ```
 
-### Options
+# License
 
-| Option      | Type      | Default | Description                    |
-| ----------- | --------- | ------- | ------------------------------ |
-| `width`     | `number`  | auto    | Output width in pixels         |
-| `height`    | `number`  | auto    | Output height in pixels        |
-| `fps`       | `number`  | `10`    | Frames per second              |
-| `quality`   | `number`  | `90`    | Quality 1-100                  |
-| `repeat`    | `number`  | `-1`    | -1 infinite, 0 none, >0 count  |
-| `fast`      | `boolean` | `false` | Faster encoding, lower quality |
-| `startTime` | `number`  | `0`     | Start time in seconds          |
-| `duration`  | `number`  | full    | Clip duration in seconds       |
+The expo-gifski wrapper code is [MIT](LICENSE) licensed.
 
-## Contributing
+This package includes prebuilt binaries of [gifski](https://gif.ski/), which is licensed under [AGPL-3.0-or-later](https://www.gnu.org/licenses/agpl-3.0.html). See [THIRD-PARTY-NOTICES](THIRD-PARTY-NOTICES) for full attribution.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+# Contributing
 
-## License
-
-MIT
+Contributions are very welcome! Please refer to guidelines described in the [contributing guide](CONTRIBUTING.md).

@@ -38,3 +38,14 @@ if [ ${#MISSING[@]} -gt 0 ]; then
 fi
 
 echo "All prebuilt binaries present."
+
+REPO_ROOT="$ROOT/../.."
+cp "$REPO_ROOT/README.md" "$ROOT/README.md"
+cp "$REPO_ROOT/LICENSE" "$ROOT/LICENSE"
+cp "$REPO_ROOT/THIRD-PARTY-NOTICES" "$ROOT/THIRD-PARTY-NOTICES"
+sed -i '' \
+  -e 's|\.github/resources/|https://github.com/adam-sajko/expo-gifski/raw/main/.github/resources/|g' \
+  -e 's|\[contributing guide\](CONTRIBUTING.md)|[contributing guide](https://github.com/adam-sajko/expo-gifski/blob/main/CONTRIBUTING.md)|g' \
+  -e 's|\[MIT\](LICENSE)|[MIT](https://github.com/adam-sajko/expo-gifski/blob/main/LICENSE)|g' \
+  -e 's|\[THIRD-PARTY-NOTICES\](THIRD-PARTY-NOTICES)|[THIRD-PARTY-NOTICES](https://github.com/adam-sajko/expo-gifski/blob/main/THIRD-PARTY-NOTICES)|g' \
+  "$ROOT/README.md"

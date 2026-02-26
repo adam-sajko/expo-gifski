@@ -1,0 +1,32 @@
+# Third-Party Notices
+
+This package includes prebuilt binaries of the following third-party software.
+
+## gifski
+
+- https://gif.ski/
+- Source: https://github.com/ImageOptim/gifski
+- License: AGPL-3.0-or-later (https://www.gnu.org/licenses/agpl-3.0.html)
+- Copyright (c) Kornel Lesiński
+
+## libimagequant
+
+- https://pngquant.org/lib/
+- Source: https://github.com/ImageOptim/libimagequant
+- License: GPL-3.0-or-later (https://www.gnu.org/licenses/gpl-3.0.html), or commercial
+- Copyright (c) 2009-2018 Kornel Lesiński
+
+libimagequant is derived from code by Jef Poskanzer and Greg Roelofs.
+The following notice is required per the original pngquant license:
+
+---
+
+(c) 1989, 1991 by Jef Poskanzer.
+(c) 1997, 2000, 2002 by Greg Roelofs.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted, provided
+that the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation. This software is provided "as is" without express or
+implied warranty.
