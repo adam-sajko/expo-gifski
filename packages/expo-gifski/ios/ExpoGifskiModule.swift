@@ -39,6 +39,10 @@ public class ExpoGifskiModule: Module {
         Function("getGifskiVersion") {
             return getGifskiVersion()
         }
+
+        AsyncFunction("getVideoThumbnail") { (videoUri: String, timeMs: Double) -> [String: Any] in
+            return try self.getVideoThumbnailImpl(videoUri: videoUri, timeMs: timeMs)
+        }
     }
 
     private func resolveFilePath(_ uriOrPath: String) -> String {
@@ -187,7 +191,49 @@ public class ExpoGifskiModule: Module {
             ])
         }
 
-        return resolvedOutput
+        return outputPath
+    }
+
+    private func getVideoThumbnailImpl(videoUri: String, timeMs: Double) throws -> [String: Any] {
+        let resolvedVideo = resolveFilePath(videoUri)
+
+        let videoURL: URL
+        if resolvedVideo.hasPrefix("/") {
+            videoURL = URL(fileURLWithPath: resolvedVideo)
+        } else if let url = URL(string: videoUri) {
+            videoURL = url
+        } else {
+            throw NSError(domain: "ExpoGifski", code: -10, userInfo: [
+                NSLocalizedDescriptionKey: "Invalid video URI: \(videoUri)"
+            ])
+        }
+
+        let asset = AVURLAsset(url: videoURL)
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        generator.requestedTimeToleranceBefore = CMTime(seconds: 0.1, preferredTimescale: 600)
+        generator.requestedTimeToleranceAfter = CMTime(seconds: 0.1, preferredTimescale: 600)
+
+        let time = CMTime(seconds: timeMs / 1000.0, preferredTimescale: 600)
+        let cgImage = try generator.copyCGImage(at: time, actualTime: nil)
+        let image = UIImage(cgImage: cgImage)
+
+        guard let jpegData = image.jpegData(compressionQuality: 0.9) else {
+            throw NSError(domain: "ExpoGifski", code: -20, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to encode thumbnail as JPEG"
+            ])
+        }
+
+        let filename = "expo_gifski_thumb_\(UUID().uuidString).jpg"
+        let tmpPath = (NSTemporaryDirectory() as NSString).appendingPathComponent(filename)
+        let tmpURL = URL(fileURLWithPath: tmpPath)
+        try jpegData.write(to: tmpURL)
+
+        return [
+            "uri": tmpURL.absoluteString,
+            "width": cgImage.width,
+            "height": cgImage.height
+        ]
     }
 }
 

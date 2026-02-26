@@ -37,6 +37,19 @@ export function getGifskiVersion(): string {
   return ExpoGifskiModule.getGifskiVersion();
 }
 
+export interface VideoThumbnailResult {
+  uri: string;
+  width: number;
+  height: number;
+}
+
+export async function getVideoThumbnail(
+  videoUri: string,
+  timeMs: number = 0,
+): Promise<VideoThumbnailResult> {
+  return await ExpoGifskiModule.getVideoThumbnail(videoUri, timeMs);
+}
+
 export function addProgressListener(
   callback: (progress: GifskiProgress) => void,
 ): { remove: () => void } {
@@ -45,6 +58,7 @@ export function addProgressListener(
 
 export default {
   encodeGifFromVideo,
+  getVideoThumbnail,
   getModuleVersion,
   getGifskiVersion,
   addProgressListener,

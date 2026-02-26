@@ -5,12 +5,12 @@ import {
   encodeGifFromVideo,
   getGifskiVersion,
   getModuleVersion,
+  getVideoThumbnail,
   type GifskiProgress,
 } from "expo-gifski";
 import * as ImagePicker from "expo-image-picker";
 import * as Sharing from "expo-sharing";
 import { StatusBar } from "expo-status-bar";
-import * as VideoThumbnails from "expo-video-thumbnails";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -440,10 +440,6 @@ function AppContent() {
     });
     if (!result.canceled && result.assets.length > 0) {
       const asset = result.assets[0];
-      const durSec = asset.duration ? (asset.duration / 1000).toFixed(1) : "?";
-      console.log(
-        `[gifski] Picked video: ${asset.width}x${asset.height}, ${durSec}s, ${asset.mimeType ?? "unknown"}`,
-      );
       setVideoUri(asset.uri);
       setOutputPath(null);
       setShowResult(false);
@@ -458,11 +454,10 @@ function AppContent() {
         setHeight(scaled.height.toString());
       }
       try {
-        const thumb = await VideoThumbnails.getThumbnailAsync(asset.uri, {
-          time: 0,
-        });
+        const thumb = await getVideoThumbnail(asset.uri);
         setVideoThumbnail(thumb.uri);
-      } catch {
+      } catch (e) {
+        console.warn("[gifski] Thumbnail generation failed:", e);
         setVideoThumbnail(null);
       }
     }
@@ -491,10 +486,8 @@ function AppContent() {
         startTime: Math.max(0, parseFloat(startTime) || 0),
         duration: Math.max(0.1, parseFloat(clipDuration) || 3),
       };
-      console.log("[gifski] Encoding from video:", opts);
       const result = await encodeGifFromVideo(videoUri, output, opts);
       sub.remove();
-      console.log("[gifski] Encoding complete:", result);
       setOutputPath(result);
       setShowResult(true);
     } catch (error) {
@@ -534,6 +527,7 @@ function AppContent() {
       >
         {!videoUri ? (
           <Pressable
+            key="picker"
             style={s.emptyPicker}
             onPress={handlePickVideo}
             disabled={isEncoding}
@@ -546,6 +540,7 @@ function AppContent() {
           </Pressable>
         ) : (
           <Pressable
+            key="video"
             onPress={handlePickVideo}
             disabled={isEncoding}
             style={s.videoCard}
@@ -613,7 +608,9 @@ function AppContent() {
                           setStartTime(clamped.toFixed(1));
                           const remaining = videoDuration - clamped;
                           if ((parseFloat(clipDuration) || 0) > remaining) {
-                            setClipDuration(Math.max(0.1, remaining).toFixed(1));
+                            setClipDuration(
+                              Math.max(0.1, remaining).toFixed(1),
+                            );
                           }
                         }}
                         keyboardType="decimal-pad"

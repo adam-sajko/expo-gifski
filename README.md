@@ -41,12 +41,16 @@ Prebuilt Rust binaries ship in the npm package — no Rust toolchain needed.
 # API
 
 ```typescript
-import { encodeGifFromVideo, addProgressListener } from "expo-gifski";
+import {
+  encodeGifFromVideo,
+  addProgressListener,
+  getVideoThumbnail,
+} from "expo-gifski";
 ```
 
 ### `encodeGifFromVideo(videoUri, outputPath, options?)`
 
-Converts a video file to a GIF. Returns a promise that resolves to the output file path.
+Convert a video file to a GIF. The returned promise resolves to the output file path.
 
 ```typescript
 const result = await encodeGifFromVideo(
@@ -56,11 +60,22 @@ const result = await encodeGifFromVideo(
 );
 ```
 
-Uses `AVAssetImageGenerator` on iOS, `MediaMetadataRetriever` on Android.
+### `getVideoThumbnail(videoUri, timeMs?)`
+
+Extract a single video frame as a JPEG thumbnail. Returns `{ uri, width, height }`.
+
+```typescript
+const thumb = await getVideoThumbnail("file:///video.mp4", 500);
+```
+
+| Parameter  | Type     | Default | Description               |
+| ---------- | -------- | ------- | ------------------------- |
+| `videoUri` | `string` | —       | URI of the source video   |
+| `timeMs`   | `number` | `0`     | Timestamp in milliseconds |
 
 ### `addProgressListener(callback)`
 
-Subscribes to encoding progress events. Returns a subscription with a `remove()` method.
+Subscribe to encoding progress events. The returned subscription has a `remove()` method.
 
 ```typescript
 const sub = addProgressListener(
@@ -86,34 +101,52 @@ const sub = addProgressListener(
 
 # Example
 
-Pick a video, encode it, show the GIF:
+Pick a video, preview it, encode a GIF:
 
 ```tsx
 import { useState } from "react";
-import { Button, Image, Text, View } from "react-native";
+import { Alert, Button, Image, Text, View } from "react-native";
+import { Paths } from "expo-file-system";
+import {
+  addProgressListener,
+  encodeGifFromVideo,
+  getVideoThumbnail,
+  type GifskiProgress,
+} from "expo-gifski";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
-import { encodeGifFromVideo, addProgressListener } from "expo-gifski";
 
 export default function App() {
+  const [thumbnail, setThumbnail] = useState<string | null>(null);
   const [gif, setGif] = useState<string | null>(null);
+  const [videoUri, setVideoUri] = useState<string | null>(null);
   const [status, setStatus] = useState("");
 
-  const convert = async () => {
+  const pickVideo = async () => {
     const pick = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["videos"],
     });
-    if (pick.canceled) return;
+    if (pick.canceled || !pick.assets?.[0]) return;
 
-    const output = FileSystem.cacheDirectory + `output-${Date.now()}.gif`;
+    const asset = pick.assets[0];
+    setVideoUri(asset.uri);
+    setGif(null);
+    setStatus("");
 
-    const sub = addProgressListener(({ progress }) =>
+    const thumb = await getVideoThumbnail(asset.uri, 500).catch(() => null);
+    setThumbnail(thumb?.uri ?? null);
+  };
+
+  const convert = async () => {
+    if (!videoUri) return;
+    const output = `${Paths.cache.uri}output_${Date.now()}.gif`;
+
+    const sub = addProgressListener(({ progress }: GifskiProgress) =>
       setStatus(`${Math.round(progress * 100)}%`),
     );
 
     try {
-      setStatus("Encoding…");
-      const result = await encodeGifFromVideo(pick.assets[0].uri, output, {
+      setStatus("Preparing...");
+      const result = await encodeGifFromVideo(videoUri, output, {
         fps: 10,
         width: 320,
         quality: 90,
@@ -121,8 +154,9 @@ export default function App() {
       });
       setGif(result);
       setStatus("Done!");
-    } catch (e) {
-      setStatus(`Error: ${e}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      Alert.alert("Encoding Error", message);
     } finally {
       sub.remove();
     }
@@ -130,7 +164,17 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button title="Pick video & make GIF" onPress={convert} />
+      <Button title="Pick video" onPress={pickVideo} />
+      {thumbnail && !gif && (
+        <View>
+          <Text style={{ textAlign: "center" }}>Thumbnail</Text>
+          <Image
+            source={{ uri: thumbnail }}
+            style={{ width: 320, height: 180 }}
+          />
+        </View>
+      )}
+      {videoUri && !gif && <Button title="Encode GIF" onPress={convert} />}
       <Text>{status}</Text>
       {gif && (
         <Image source={{ uri: gif }} style={{ width: 320, height: 320 }} />

@@ -43,16 +43,6 @@ yarn ios          # or yarn android
 | `yarn open-gif --folder` | Open cache folder in Finder          |
 | `yarn open-gif --list`   | List generated GIFs                  |
 
-## Releasing
-
-Tag a version, CI handles the rest:
-
-```bash
-cd packages/expo-gifski
-npm version patch   # or minor / major
-git push --follow-tags
-```
-
 ## Architecture
 
 ```

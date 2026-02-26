@@ -11,9 +11,11 @@
     "android": "yarn workspace gifski-example android",
     "ios": "yarn workspace gifski-example ios",
     "lint": "yarn workspace gifski-example lint",
+    "typecheck": "yarn workspace gifski-example typecheck",
     "build": "./scripts/rebuild.sh",
     "build:clean": "./scripts/rebuild.sh --clean",
-    "open-gif": "./scripts/open-gif.sh"
+    "open-gif": "./scripts/open-gif.sh",
+    "bump": "./scripts/bump-version.sh"
   },
   "devDependencies": {
     "typescript": "~5.9.2"

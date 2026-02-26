@@ -45,6 +45,10 @@ class ExpoGifskiModule : Module() {
     Function("getGifskiVersion") {
       uniffiGetGifskiVersion()
     }
+
+    AsyncFunction("getVideoThumbnail") { videoUri: String, timeMs: Double ->
+      getVideoThumbnail(videoUri, timeMs)
+    }
   }
 
   private fun makeProgressCallback(): UniffiProgressCallback {
@@ -222,12 +226,51 @@ class ExpoGifskiModule : Module() {
         throw Exception("Unexpected error during GIF encoding: ${e.message}")
       }
 
-      return resolvedOutput
+      return outputPath
     } finally {
       retriever.release()
       for (path in tempPngPaths) {
         try { File(path).delete() } catch (_: Exception) {}
       }
+    }
+  }
+
+  private fun getVideoThumbnail(videoUri: String, timeMs: Double): Map<String, Any> {
+    val context = appContext.reactContext ?: throw IllegalStateException("React context is not available")
+    val retriever = MediaMetadataRetriever()
+    try {
+      val resolvedVideo = resolveFilePath(videoUri)
+      if (resolvedVideo.startsWith("/")) {
+        retriever.setDataSource(resolvedVideo)
+      } else {
+        retriever.setDataSource(context, Uri.parse(videoUri))
+      }
+
+      val timeUs = (timeMs * 1000).toLong()
+      val rawBitmap = retriever.getFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST)
+        ?: throw IllegalArgumentException("Failed to extract frame at ${timeMs}ms")
+
+      val bitmap = rawBitmap.copy(Bitmap.Config.ARGB_8888, false)
+        ?: throw IllegalStateException("Failed to copy bitmap to ARGB_8888")
+      val width = bitmap.width
+      val height = bitmap.height
+      rawBitmap.recycle()
+
+      val tmpFile = File(context.cacheDir, "expo_gifski_thumb_${UUID.randomUUID()}.png")
+      FileOutputStream(tmpFile).use { out ->
+        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
+          throw IllegalStateException("Failed to compress thumbnail")
+        }
+      }
+      bitmap.recycle()
+
+      return mapOf(
+        "uri" to Uri.fromFile(tmpFile).toString(),
+        "width" to width,
+        "height" to height
+      )
+    } finally {
+      retriever.release()
     }
   }
 }
