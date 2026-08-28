@@ -1,0 +1,16 @@
+[package]
+name = "encode-bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+expo-gifski = { path = "../../packages/expo-gifski/rust" }
+lodepng = "3.12"
+
+# Cargo honours profile settings only from the root package, so these apply to
+# the whole graph including expo-gifski.
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3

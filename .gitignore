@@ -17,6 +17,8 @@ build/
 # Rust build outputs
 **/rust/target/
 **/rust/.cargo/
+bench/*/target/
+bench/*/out/
 
 # iOS build outputs
 **/ios/build/

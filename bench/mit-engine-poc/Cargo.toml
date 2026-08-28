@@ -1,0 +1,19 @@
+[package]
+name = "mit-engine-poc"
+version = "0.1.0"
+edition = "2021"
+publish = false
+default-run = "mit-engine-poc"
+
+[dependencies]
+# "threads" (rayon) is a default feature -- keep it. Dropping defaults only to
+# avoid the heavy `image` dep would silently disable multi-threading too.
+quantette = { version = "0.6", default-features = false, features = ["kmeans", "threads"] }
+palette = "0.7"
+gif = { version = "0.14", default-features = false, features = ["std"] }
+resize = "0.8"
+rgb = "0.8"
+lodepng = "3.12"
+
+[profile.release]
+opt-level = 3
